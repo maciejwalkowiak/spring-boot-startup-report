@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible"
+          content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+            integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
+            crossorigin="anonymous"></script>
+
+    <style type="text/tailwindcss">
+        .col-icon {
+            @apply w-auto text-center border px-4 py-2;
+        }
+        .col-name {
+            @apply w-1/5 border px-4 py-2;
+        }
+        .col-duration {
+            @apply w-1/5 border px-4 py-2 text-right;
+        }
+        .col-details {
+            @apply w-3/5 border px-4 py-2 text-left;
+        }
+        .event-table {
+            @apply rounded w-full table-auto break-all bg-gray-100 text-gray-700;
+        }
+    </style>
+</head>
+<body>
+<div class="p-4 w-full bg-gray-400">
+    <table class="event-table">
+        <thead>
+        <tr class="font-medium">
+            <td class="col-icon"></td>
+            <td class="col-name">Name</td>
+            <td class="col-duration">Duration (s)</td>
+            <td class="col-details">Details</td>
+        </tr>
+        </thead>
+        <tbody id="tbody">
+        </tbody>
+    </table>
+</div>
+<script>
+    const zoomOutIcon = `<svg class="w-6 h-6" fill="none"
+           stroke="currentColor"
+           viewBox="0 0 24 24"
+           xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7"></path>
+        </svg>`;
+
+    const zoomInIcon = `<svg xmlns="http://www.w3.org/2000/svg"
+     fill="none"
+     viewBox="0 0 24 24"
+     stroke-width="1.5"
+     stroke="currentColor"
+     class="w-6 h-6">
+    <path stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6"/>
+</svg>`;
+
+    function color(level) {
+        const colors = ['yellow', 'green'];
+        const levels = [100, 200, 300, 400, 500];
+
+        const arr = ['gray', ...colors.flatMap(color => levels.map(l => `${color}-${l}`))];
+
+        return arr[level];
+    }
+
+    function row(event, level = 0) {
+        const hasChildren = Array.isArray(event.children) && event.children.length > 0;
+        console.log(hasChildren)
+
+        let result = `<tr class="bg-${color(level)} cursor-pointer hover:bg-purple-200"
+    data-id="${event.id}"
+    data-expanded="false">
+    <td class="col-icon">
+        ${hasChildren ? `<span class="float-right icon">
+        ${zoomInIcon}</span>` : '<div style="width:24px">&nbsp;</div>'}
+    </td>
+    <td class="col-name pl-${2 + level * 2}">${event.label}<span
+            class="text-gray-500"> (${event.children.length})</span></td>
+    <td class="col-duration">${event.value}</td>
+    <td class="col-details text-sm">
+        <ul>${Object.entries(event.tags).map(([k, v]) => `<li><strong>${k}</strong>: ${v}</li>`).join("")}</ul>
+    </td>
+</tr>`;
+
+        if (hasChildren) {
+            result += `<tr>
+    <td colspan="4"
+        class="hidden"
+        data-parent-id="${event.id}">
+        <table class="event-table">
+            ${event.children.map(e => row(e, level + 1)).join("")}
+        </table>
+    </td>
+</tr>`
+        }
+
+        return result;
+    }
+
+    $ = jQuery;
+    $.ajax({
+        url: "/startup",
+        context: document.body
+    }).done(function (res) {
+        document.getElementById("tbody").innerHTML = res.filter(e => e.parentId === 0).map(event => row(event, 0)).join("");
+        document.querySelectorAll("[data-id]").forEach(it => {
+            it.addEventListener('click', function () {
+                const childRow = document.querySelector(`[data-parent-id='${it.getAttribute("data-id")}']`);
+
+                if (childRow != null) {
+                    if (it.getAttribute("data-expanded") === "false") {
+                        it.setAttribute("data-expanded", "true");
+                        it.querySelector(".icon").innerHTML = zoomOutIcon;
+                    } else {
+                        it.setAttribute("data-expanded", "false");
+                        it.querySelector(".icon").innerHTML = zoomInIcon;
+                    }
+
+                    if (childRow.classList.contains('hidden')) {
+                        childRow.classList.remove('hidden');
+                    } else {
+                        hideChildren(childRow);
+                    }
+                }
+            });
+        })
+    });
+
+    function hideChildren(child) {
+        child.classList.add('hidden');
+        document.querySelectorAll(`[data-parent-id='${child.getAttribute("data-id")}']`).forEach(child => hideChildren(child));
+    }
+
+</script>
+</body>
+</html>
