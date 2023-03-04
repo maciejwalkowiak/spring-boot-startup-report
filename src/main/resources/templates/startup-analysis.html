@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -8,12 +8,16 @@
           content="ie=edge">
     <title>Document</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module">
+    <script type="module" th:inline="javascript">
+
+        //<![CDATA[
         import {h, text, app} from "https://cdn.skypack.dev/hyperapp"
 
         const colorNames = ['yellow', 'green'];
         const levels = [100, 200, 300, 400, 500];
         const colors = ['gray', ...colorNames.flatMap(color => levels.map(l => `${color}-${l}`))];
+
+        const data = JSON.parse(/*[[${events}]]*/ "");
 
         const fetchJson = (dispatch, options) => {
             fetch(options.url)
@@ -97,13 +101,7 @@
         }
 
         app({
-            init: [{events: [], expandedEventIds: [], duration: 0}, [
-                fetchJson,
-                {
-                    url: "/startup",
-                    action: SetEvents,
-                }
-            ]],
+            init: [{events: data, expandedEventIds: [], duration: 0}, []],
             view: (state) => h("div", {}, [
                 h("div", {class: "p-4 w-full bg-gray-100 text-gray-700"}, [
                     h("h2", {}, text("spring boot startup analyzer")),
@@ -128,6 +126,7 @@
                 ])]),
             node: document.getElementById("app"),
         })
+        //]]>
     </script>
 
     <style type="text/tailwindcss">
