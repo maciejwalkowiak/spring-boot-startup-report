@@ -4,14 +4,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup;
 import org.springframework.boot.context.metrics.buffering.StartupTimeline;
 import org.springframework.core.metrics.StartupStep;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@RestController
+@Controller
 public class StartupEventsController {
     private final BufferingApplicationStartup applicationStartup;
     private final TagsResolver resolver;
@@ -22,7 +24,13 @@ public class StartupEventsController {
         this.resolver = resolver;
     }
 
+    @GetMapping("/startup-analysis")
+    String index() {
+        return "startup-analysis";
+    }
+
     @GetMapping("/startup")
+    @ResponseBody
     List<Event> foo() {
         List<StartupTimeline.TimelineEvent> events = applicationStartup.getBufferedTimeline()
                 .getEvents()

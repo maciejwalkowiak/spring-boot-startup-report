@@ -1,4 +1,4 @@
-package com.example.startupevents;
+package com.example.startupevents.app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

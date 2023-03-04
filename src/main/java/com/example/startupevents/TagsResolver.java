@@ -15,8 +15,7 @@ import org.springframework.core.annotation.MergedAnnotations;
 import org.springframework.core.metrics.StartupStep;
 import org.springframework.stereotype.Component;
 
-@Component
-
+//@Component
 public class TagsResolver implements ApplicationContextAware {
     private ApplicationContext ctx;
 

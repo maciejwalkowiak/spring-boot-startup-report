@@ -62,10 +62,10 @@
         const Placeholder = () =>
             h("div", {
                 innerHTML: `&nbsp;`,
-                style: { width: '24px' }
-            },[])
+                style: {width: '24px'}
+            }, [])
 
-        const Row = (event, expandedEventIds, level = 0) =>
+        const Row = (event, expandedEventIds, minDuration, level = 0) =>
             h("tbody", {}, [
                 h("tr", {class: `cursor-pointer hover:bg-purple-200 bg-${colors[level]}`, onclick: [Expand, event]}, [
                     h("td", {
@@ -76,8 +76,10 @@
                     h("td", {class: "col-details text-sm"}, Details(event.tags))]
                 ),
                 h("tr", {}, [
-                    h("td", { colspan: 4, class: { hidden: expandedEventIds.indexOf(event.id) === -1}},
-                        event.children.map(event => Row(event, expandedEventIds, level + 1))
+                    h("td", {colspan: 4, class: {hidden: expandedEventIds.indexOf(event.id) === -1}},
+                        event.children
+                            .filter(event => event.value >= minDuration)
+                            .map(event => Row(event, expandedEventIds, minDuration, level + 1))
                     )
                 ])
             ]);
@@ -90,29 +92,40 @@
             }
         };
 
+        const OnDurationChange = (state, target) => {
+            return {...state, duration: target.value}
+        }
+
         app({
-            init: [{events: [], expandedEventIds: []}, [
+            init: [{events: [], expandedEventIds: [], duration: 0}, [
                 fetchJson,
                 {
                     url: "/startup",
                     action: SetEvents,
                 }
             ]],
-            view: (state) => h("div", {class: "p-4 w-full bg-gray-400"}, [
-                h("table", {class: "event-table"}, [
-                    h("thead", {}, [
-                        h("tr", {class: "font-medium"}, [
-                            h("td", {class: "col-icon"}, text("")),
-                            h("td", {class: "col-name"}, text("Name")),
-                            h("td", {class: "col-duration"}, text("Duration (ms)")),
-                            h("td", {class: "col-details"}, text("Details"))
-                        ])
-                    ]),
-                    ...state.events
-                        .filter(event => event.parentId === 0)
-                        .map(event => Row(event, state.expandedEventIds))
-                ])
-            ]),
+            view: (state) => h("div", {}, [
+                h("div", {class: "p-4 w-full bg-gray-100 text-gray-700"}, [
+                    h("h2", {}, text("spring boot startup analyzer")),
+                    h("div", {}, [
+                        h("input", {type: "text", placeholder: "minimum duration", value: state.duration, oninput: (_, { target }) => [OnDurationChange, target]}, [])
+                    ])
+                ]),
+                h("div", {class: "p-4 w-full bg-gray-400"}, [
+                    h("table", {class: "event-table"}, [
+                        h("thead", {}, [
+                            h("tr", {class: "font-medium"}, [
+                                h("td", {class: "col-icon"}, text("")),
+                                h("td", {class: "col-name"}, text("Name")),
+                                h("td", {class: "col-duration"}, text("Duration (ms)")),
+                                h("td", {class: "col-details"}, text("Details"))
+                            ])
+                        ]),
+                        ...state.events
+                            .filter(event => event.parentId === 0 && event.value >= state.duration)
+                            .map(event => Row(event, state.expandedEventIds, state.duration))
+                    ])
+                ])]),
             node: document.getElementById("app"),
         })
     </script>
