@@ -1,0 +1,10 @@
+{
+	"properties": [
+		{
+			"defaultValue": "/startup-report",
+			"name": "startup-events.path",
+			"description": "Startup Events report context path",
+			"type": "java.lang.String"
+		}
+	]
+}

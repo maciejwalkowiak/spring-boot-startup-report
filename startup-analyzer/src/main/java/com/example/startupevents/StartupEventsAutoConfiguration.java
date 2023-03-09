@@ -1,22 +1,18 @@
 package com.example.startupevents;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.thymeleaf.spring6.SpringTemplateEngine;
-import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
-import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration;
 import org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.ResourceLoader;
 
 @AutoConfiguration
-@AutoConfigureAfter(ThymeleafAutoConfiguration.class)
 @ConditionalOnClass(ObjectMapper.class)
-@ConditionalOnBean({SpringTemplateEngine.class, BufferingApplicationStartup.class})
+@ConditionalOnBean({BufferingApplicationStartup.class})
 public class StartupEventsAutoConfiguration {
 
     @Bean
@@ -30,12 +26,11 @@ public class StartupEventsAutoConfiguration {
     }
 
     @Bean
-    ReportRenderer reportRenderer(TimelineFactory timelineFactory, SpringTemplateEngine templateEngine) {
-        return new ReportRenderer(timelineFactory, templateEngine);
+    ReportRenderer reportRenderer(TimelineFactory timelineFactory, ResourceLoader resourceLoader) {
+        return new ReportRenderer(timelineFactory, resourceLoader);
     }
 
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-    @ConditionalOnBean({ThymeleafViewResolver.class})
     @Bean
     StartupEventsController startupEventsController(ReportRenderer reportRenderer) {
         return new StartupEventsController(reportRenderer);

@@ -1,10 +1,13 @@
 package com.example.startupevents;
 
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class StartupEventsController {
     private final ReportRenderer reportRenderer;
 
@@ -12,9 +15,8 @@ public class StartupEventsController {
         this.reportRenderer = reportRenderer;
     }
 
-    @GetMapping("/startup-analysis")
-    String index(Model model) {
-        model.addAttribute("events", reportRenderer.render());
-        return "startup-analysis";
+    @GetMapping(value = "${startup-events.path:/startup-report}", produces = MediaType.TEXT_HTML_VALUE)
+    String index() {
+        return reportRenderer.render();
     }
 }

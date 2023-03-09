@@ -36,7 +36,7 @@ public class TagsResolver implements ApplicationContextAware {
                     collect.put("annotations", Arrays.stream(bean.getClass().getAnnotations()).map(a -> "@" + a.annotationType().getSimpleName()).collect(Collectors.joining(",")));
                 }
             } catch (NoSuchBeanDefinitionException e) {
-                LOGGER.warn("No bean with name {} found", collect.get("beanName"), e);
+                LOGGER.debug("No bean with name {} found", collect.get("beanName"), e);
             }
 
 

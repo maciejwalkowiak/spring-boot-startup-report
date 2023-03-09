@@ -3,6 +3,7 @@ package com.example.startupevents;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -36,7 +37,7 @@ public class StartupEventsCustomizer implements ContextCustomizer {
                         throw new RuntimeException(e);
                     }
                 } catch (NoSuchBeanDefinitionException e) {
-                    LOGGER.warn("Report for test {} not generated. Perhaps Thymeleaf is missing on the classpath?", testName);
+                    LOGGER.warn("Report for test {} not generated", testName, e);
                 }
             }
         });
@@ -44,5 +45,15 @@ public class StartupEventsCustomizer implements ContextCustomizer {
 
     private String getFirst() {
         return "analysis-report-" + testName + ".html";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj != null) && (obj.getClass() == getClass());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }
