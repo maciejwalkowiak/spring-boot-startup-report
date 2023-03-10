@@ -1,5 +1,5 @@
 
-package com.example.startupevents;
+package com.maciejwalkowiak.spring.boot.startup;
 
 import org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup;
 import org.springframework.context.ApplicationContextInitializer;

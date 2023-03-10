@@ -1,2 +1,2 @@
-org.springframework.context.ApplicationContextInitializer=com.example.startupevents.StartupEventsInitializer
-org.springframework.test.context.ContextCustomizerFactory=com.example.startupevents.StartupEventsCustomizerFactory
+org.springframework.context.ApplicationContextInitializer=com.maciejwalkowiak.spring.boot.startup.StartupEventsInitializer
+org.springframework.test.context.ContextCustomizerFactory=com.maciejwalkowiak.spring.boot.startup.StartupEventsCustomizerFactory

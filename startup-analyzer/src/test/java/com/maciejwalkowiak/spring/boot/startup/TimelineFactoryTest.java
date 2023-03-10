@@ -1,4 +1,4 @@
-package com.example.startupevents;
+package com.maciejwalkowiak.spring.boot.startup;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -1,4 +1,4 @@
-package com.example.startupevents;
+package com.maciejwalkowiak.spring.boot.startup;
 
 import java.util.Arrays;
 import java.util.HashMap;
