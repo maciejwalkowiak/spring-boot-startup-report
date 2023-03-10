@@ -1,14 +1,16 @@
 package com.example.startupevents;
 
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Exposes startup event report over HTTP.
+ * 
+ * @author Maciej Walkowiak
+ */
 @RestController
-public class StartupEventsController {
+class StartupEventsController {
     private final ReportRenderer reportRenderer;
 
     public StartupEventsController(ReportRenderer reportRenderer) {

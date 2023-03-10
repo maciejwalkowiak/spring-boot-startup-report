@@ -11,7 +11,12 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.StreamUtils;
 
-public class ReportRenderer {
+/**
+ * Renders the startup event report to an string containing complete HTML page.
+ * 
+ * @author Maciej Walkowiak
+ */
+class ReportRenderer {
     private final TimelineFactory timelineFactory;
     private final ResourceLoader resourceLoader;
     private final ObjectMapper mapper = new ObjectMapper();
@@ -31,7 +36,7 @@ public class ReportRenderer {
         }
     }
 
-    public String serialize(List<TimelineFactory.Event> events) {
+    public String serialize(List<Event> events) {
         try {
             return mapper.writeValueAsString(events);
         } catch (JsonProcessingException e) {

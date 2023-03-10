@@ -3,9 +3,6 @@ package com.example.startupevents;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Objects;
-import java.util.UUID;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +12,11 @@ import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.test.context.ContextCustomizer;
 import org.springframework.test.context.MergedContextConfiguration;
 
+/**
+ * Adds a listener that generates an HTML report with {@link ReportRenderer} when application context gets closed.
+ * 
+ * @author Maciej Walkowiak
+ */
 public class StartupEventsCustomizer implements ContextCustomizer {
     private static final Logger LOGGER = LoggerFactory.getLogger(StartupEventsCustomizer.class);
     private final String testName;
