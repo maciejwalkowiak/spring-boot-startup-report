@@ -19,14 +19,6 @@
 
         const data = %events%;
 
-        const fetchJson = (dispatch, options) => {
-            fetch(options.url)
-                .then(response => response.json())
-                .then(data => dispatch(options.action, data))
-        }
-
-        const SetEvents = (state, data) => ({...state, events: data})
-
         const Details = (tags) =>
             h("ul", {}, Object.entries(tags).map(([k, v]) => h("li", {}, [
                 h("strong", {}, text(k + ": ")),
@@ -75,7 +67,7 @@
                     h("td", {
                         class: "col-icon",
                     }, event.children.length > 0 && expandedEventIds.indexOf(event.id) === -1 ? zoomIn() : expandedEventIds.indexOf(event.id) !== -1 ? zoomOut() : Placeholder()),
-                    h("td", {class: `col-name pl-${2 + level * 2}`}, text(event.label)),
+                    h("td", {class: `col-name pl-${2 + level * 2}`}, text(event.label + " id:" + event.id + " parentId:" + event.parentId)),
                     h("td", {class: "col-duration"}, text(event.value)),
                     h("td", {class: "col-duration"}, text(event.actualDuration)),
                     h("td", {class: "col-details text-sm"}, Details(event.tags))]
@@ -161,7 +153,7 @@
                             ])
                         ]),
                         ...state.events
-                            .filter(event => event.parentId === 0 && FilterEvent(event, state.duration, state.search))
+                            .filter(event => FilterEvent(event, state.duration, state.search)) // show ones with parentId == null on the first level
                             .map(event => Row(event, state.expandedEventIds, state.duration, state.search))
                     ])
                 ])]),

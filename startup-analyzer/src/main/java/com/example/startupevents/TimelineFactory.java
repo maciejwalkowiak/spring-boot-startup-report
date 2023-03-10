@@ -19,16 +19,22 @@ class TimelineFactory {
 
     public List<Event> getTimeline() {
         // sort from longest to shortest
-        List<StartupTimeline.TimelineEvent> events = applicationStartup.getBufferedTimeline()
+        List<StartupTimeline.TimelineEvent> timelineEvents = applicationStartup.getBufferedTimeline()
                 .getEvents()
                 .stream()
-                .sorted(Collections.reverseOrder(Comparator.comparingLong((StartupTimeline.TimelineEvent o) -> o.getDuration().toMillis())))
+                .sorted(Collections.reverseOrder(
+                        Comparator.comparingLong((StartupTimeline.TimelineEvent o) -> o.getDuration().toMillis())))
                 .collect(Collectors.toList());
 
         // create a hierarchical structure
-        return events.stream()
-                .map(it -> Event.create(it,  events, tagsResolver))
-                .sorted(Collections.reverseOrder(Comparator.comparingLong((Event o) -> o.getValue())))
+        List<Event> events = timelineEvents.stream()
+                .map(it -> Event.create(it, timelineEvents, tagsResolver))
+                .sorted(Collections.reverseOrder(Comparator.comparingLong(Event::getValue)))
+                .filter(it -> it.getParentId() == null)
                 .collect(Collectors.toList());
+
+        // in most (all?) cases there is single event in the top level of the hierarchy,
+        // if that's the case its children are returned
+        return events.size() == 1 ? events.get(0).getChildren() : events;
     }
 }
