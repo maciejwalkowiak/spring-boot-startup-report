@@ -9,26 +9,25 @@ import org.springframework.boot.context.metrics.buffering.StartupTimeline;
 import org.springframework.boot.context.metrics.buffering.StartupTimeline.TimelineEvent;
 
 class Event {
-    private final List<Event> children;
-
     private final Long id;
     private final Long parentId;
     private final String label;
     private final long value;
     private final long actualDuration;
     private final Map<String, String> tags;
+    private final List<Event> children;
 
     static Event create(StartupTimeline.TimelineEvent timelineEvent, List<StartupTimeline.TimelineEvent> allEvents, TagsResolver tagsResolver) {
         List<TimelineEvent> children = findChildren(timelineEvent.getStartupStep().getId(), allEvents);;
 
         List<Event> eventChildren = children == null ? Collections.emptyList() : children.stream().map(c -> create(c, allEvents, tagsResolver)).collect(Collectors.toList());
 
-        return new Event(eventChildren, 
-            timelineEvent.getStartupStep().getId(), 
-            timelineEvent.getStartupStep().getParentId(), 
-            timelineEvent.getStartupStep().getName(), 
-            timelineEvent.getDuration().toMillis(), 
-            timelineEvent.getDuration().toMillis() - eventChildren.stream().map(Event::getValue).reduce(0L, Long::sum), 
+        return new Event(eventChildren,
+            timelineEvent.getStartupStep().getId(),
+            timelineEvent.getStartupStep().getParentId(),
+            timelineEvent.getStartupStep().getName(),
+            timelineEvent.getDuration().toMillis(),
+            timelineEvent.getDuration().toMillis() - eventChildren.stream().map(Event::getValue).reduce(0L, Long::sum),
             tagsResolver.resolveTags(timelineEvent)
         );
     }

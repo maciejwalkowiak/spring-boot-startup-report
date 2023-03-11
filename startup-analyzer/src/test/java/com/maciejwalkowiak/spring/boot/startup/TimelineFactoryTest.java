@@ -9,10 +9,12 @@ import org.springframework.boot.context.metrics.buffering.BufferingApplicationSt
 import org.springframework.core.metrics.StartupStep;
 
 public class TimelineFactoryTest {
+    private final BufferingApplicationStartup startup = new BufferingApplicationStartup(100);
+    private final TimelineFactory timelineFactory = new TimelineFactory(startup, new TagsResolver());
 
     @Test
     void generatesTimelineWithMultipleTopElements() {
-        BufferingApplicationStartup startup = new BufferingApplicationStartup(100);
+        // given
         startup.startRecording();
         StartupStep step1 = startup.start("event1");
         StartupStep step2 = startup.start("event2");
@@ -21,11 +23,11 @@ public class TimelineFactoryTest {
         StartupStep step3 = startup.start("event3");
         step3.end();
 
-        TimelineFactory timelineFactory = new TimelineFactory(startup, new TagsResolver());
+        // when
         List<Event> events = timelineFactory.getTimeline();
 
+        // then
         assertThat(events).hasSize(2);
-
         assertThat(events).anySatisfy(it -> {
             assertThat(it.getParentId()).isNull();
             assertThat(it.getId()).isZero();
@@ -39,7 +41,6 @@ public class TimelineFactoryTest {
                         assertThat(child.getParentId()).isEqualTo(it.getId());
                     });
         });
-
         assertThat(events).anySatisfy(it -> {
             assertThat(it.getId()).isEqualTo(2);
             assertThat(it.getLabel()).isEqualTo("event3");
@@ -49,7 +50,7 @@ public class TimelineFactoryTest {
 
     @Test
     void generatesTimelineWithSingleTopElement() {
-        BufferingApplicationStartup startup = new BufferingApplicationStartup(100);
+        // given
         startup.startRecording();
         StartupStep step1 = startup.start("event1");
         StartupStep step2 = startup.start("event2");
@@ -58,23 +59,21 @@ public class TimelineFactoryTest {
         step3.end();
         step1.end();
 
-        TimelineFactory timelineFactory = new TimelineFactory(startup, new TagsResolver());
+        // when
         List<Event> events = timelineFactory.getTimeline();
 
+        // then
         assertThat(events).hasSize(2);
-
         assertThat(events).anySatisfy(it -> {
             assertThat(it.getLabel()).isEqualTo("event2");
             assertThat(it.getParentId()).isNotNull();
             assertThat(it.getId()).isEqualTo(1);
         });
-
         assertThat(events).anySatisfy(it -> {
             assertThat(it.getLabel()).isEqualTo("event3");
             assertThat(it.getParentId()).isNotNull();
             assertThat(it.getId()).isEqualTo(2);
         });
-
         assertThat(events).noneSatisfy(it -> assertThat(it.getLabel()).isEqualTo("event1"));
     }
 }

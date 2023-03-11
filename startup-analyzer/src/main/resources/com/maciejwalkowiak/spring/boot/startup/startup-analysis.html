@@ -67,7 +67,7 @@
                     h("td", {
                         class: "col-icon",
                     }, event.children.length > 0 && expandedEventIds.indexOf(event.id) === -1 ? zoomIn() : expandedEventIds.indexOf(event.id) !== -1 ? zoomOut() : Placeholder()),
-                    h("td", {class: `col-name pl-${2 + level * 2}`}, text(event.label + " id:" + event.id + " parentId:" + event.parentId)),
+                    h("td", {class: `col-name pl-${2 + level * 2}`}, text(event.label)),
                     h("td", {class: "col-duration"}, text(event.value)),
                     h("td", {class: "col-duration"}, text(event.actualDuration)),
                     h("td", {class: "col-details text-sm"}, Details(event.tags))]
