@@ -1,4 +1,4 @@
-package com.example.startupevents;
+package com.maciejwalkowiak.spring.boot.startup;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;

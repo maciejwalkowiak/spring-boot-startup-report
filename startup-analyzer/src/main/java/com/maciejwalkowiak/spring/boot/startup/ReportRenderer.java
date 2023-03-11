@@ -1,4 +1,4 @@
-package com.example.startupevents;
+package com.maciejwalkowiak.spring.boot.startup;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -13,7 +13,7 @@ import org.springframework.util.StreamUtils;
 
 /**
  * Renders the startup event report to an string containing complete HTML page.
- * 
+ *
  * @author Maciej Walkowiak
  */
 class ReportRenderer {
@@ -27,7 +27,7 @@ class ReportRenderer {
     }
 
     String render() {
-        Resource resource = resourceLoader.getResource("classpath:/templates/startup-analysis.html");
+        Resource resource = resourceLoader.getResource("classpath:/com/maciejwalkowiak/spring/boot/startup/startup-analysis.html");
         try {
             String template = StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
             return template.replace("%events%", serialize(timelineFactory.getTimeline()));
