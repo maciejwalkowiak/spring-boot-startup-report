@@ -9,17 +9,84 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.maciejwalkowiak</groupId>
-    <artifactId>spring-boot-startup-analyzer-parent</artifactId>
+    <artifactId>spring-boot-startup-report-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>startup-events</name>
-    <description>startup-events</description>
+    <name>Spring Boot Startup Report Parent</name>
+    <description>Spring Boot Startup Report Parent</description>
     <packaging>pom</packaging>
+
     <properties>
         <java.version>11</java.version>
+        <spring-boot.version>2.7.7</spring-boot.version>
+        <junit.version>5.9.2</junit.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <modules>
-        <module>startup-analyzer</module>
+        <module>startup-report</module>
         <module>example</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.0.0-M9</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <scm>
+        <url>https://github.com/maciejwalkowiak/spring-boot-startup-report</url>
+        <connection>scm:git:git://github.com/maciejwalkowiak/spring-boot-startup-report.git</connection>
+        <developerConnection>
+            scm:git:ssh://git@github.com/maciejwalkowiak/spring-boot-startup-report.git
+        </developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>maciejwalkowiak</id>
+            <name>Maciej Walkowiak</name>
+        </developer>
+    </developers>
 </project>
