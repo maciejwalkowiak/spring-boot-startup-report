@@ -11,7 +11,7 @@ import org.springframework.boot.context.metrics.buffering.StartupTimeline.Timeli
 class Event {
     private final Long id;
     private final Long parentId;
-    private final String label;
+    private final String name;
     private final long value;
     private final long actualDuration;
     private final Map<String, String> tags;
@@ -36,19 +36,19 @@ class Event {
         return allEvents.stream().filter(it -> parentId.equals(it.getStartupStep().getParentId())).collect(Collectors.toList());
     }
 
-    public Event(List<Event> children, Long id, Long parentId, String label, long value, long actualDuration,
+    public Event(List<Event> children, Long id, Long parentId, String name, long value, long actualDuration,
             Map<String, String> tags) {
         this.children = children;
         this.id = id;
         this.parentId = parentId;
-        this.label = label;
+        this.name = name;
         this.value = value;
         this.actualDuration = actualDuration;
         this.tags = tags;
     }
 
-    public String getLabel() {
-        return label;
+    public String getName() {
+        return name;
     }
 
     public long getValue() {

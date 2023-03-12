@@ -31,19 +31,19 @@ public class TimelineFactoryTest {
         assertThat(events).anySatisfy(it -> {
             assertThat(it.getParentId()).isNull();
             assertThat(it.getId()).isZero();
-            assertThat(it.getLabel()).isEqualTo("event1");
+            assertThat(it.getName()).isEqualTo("event1");
             assertThat(it.getChildren())
                     .hasSize(1)
                     .singleElement()
                     .satisfies(child -> {
-                        assertThat(child.getLabel()).isEqualTo("event2");
+                        assertThat(child.getName()).isEqualTo("event2");
                         assertThat(child.getId()).isEqualTo(1);
                         assertThat(child.getParentId()).isEqualTo(it.getId());
                     });
         });
         assertThat(events).anySatisfy(it -> {
             assertThat(it.getId()).isEqualTo(2);
-            assertThat(it.getLabel()).isEqualTo("event3");
+            assertThat(it.getName()).isEqualTo("event3");
             assertThat(it.getParentId()).isNull();
         });
     }
@@ -63,17 +63,21 @@ public class TimelineFactoryTest {
         List<Event> events = timelineFactory.getTimeline();
 
         // then
-        assertThat(events).hasSize(2);
-        assertThat(events).anySatisfy(it -> {
-            assertThat(it.getLabel()).isEqualTo("event2");
+        assertThat(events).hasSize(1);
+        Event topElement = events.get(0);
+        assertThat(topElement.getName()).isEqualTo("event1");
+        assertThat(topElement.getParentId()).isNull();
+        assertThat(topElement.getId()).isZero();
+
+        assertThat(topElement.getChildren()).anySatisfy(it -> {
+            assertThat(it.getName()).isEqualTo("event2");
             assertThat(it.getParentId()).isNotNull();
             assertThat(it.getId()).isEqualTo(1);
         });
-        assertThat(events).anySatisfy(it -> {
-            assertThat(it.getLabel()).isEqualTo("event3");
+        assertThat(topElement.getChildren()).anySatisfy(it -> {
+            assertThat(it.getName()).isEqualTo("event3");
             assertThat(it.getParentId()).isNotNull();
             assertThat(it.getId()).isEqualTo(2);
         });
-        assertThat(events).noneSatisfy(it -> assertThat(it.getLabel()).isEqualTo("event1"));
     }
 }

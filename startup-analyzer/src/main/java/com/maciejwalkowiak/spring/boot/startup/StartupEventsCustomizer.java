@@ -14,7 +14,7 @@ import org.springframework.test.context.MergedContextConfiguration;
 
 /**
  * Adds a listener that generates an HTML report with {@link ReportRenderer} when application context gets closed.
- * 
+ *
  * @author Maciej Walkowiak
  */
 public class StartupEventsCustomizer implements ContextCustomizer {
@@ -32,7 +32,8 @@ public class StartupEventsCustomizer implements ContextCustomizer {
                 try {
                     ReportRenderer reportRenderer = context.getBean(ReportRenderer.class);
                     try {
-                        Path path = Files.writeString(Path.of(getFirst()), reportRenderer.render());
+                        Path buildDirectory = resolveReportDirectory();
+                        Path path = Files.writeString(buildDirectory.resolve(Path.of(reportName())), reportRenderer.render());
                         LOGGER.debug("Report for test {} saved to {}", testName, path.toAbsolutePath());
                     } catch (IOException e) {
                         LOGGER.error("Error during rendering analysis report", e);
@@ -45,8 +46,28 @@ public class StartupEventsCustomizer implements ContextCustomizer {
         });
     }
 
-    private String getFirst() {
-        return "analysis-report-" + testName + ".html";
+    private static Path resolveReportDirectory() throws IOException {
+        Path mavenTarget = Path.of("target");
+        Path gradleBuild = Path.of("build");
+
+        Path buildDirectory;
+        if (Files.exists(mavenTarget)) {
+            buildDirectory = mavenTarget;
+        } else if (Files.exists(gradleBuild)) {
+            buildDirectory = gradleBuild;
+        } else {
+            buildDirectory = Path.of(".");
+        }
+
+        Path reportDirectory = buildDirectory.resolve("startup-reports");
+        if (!Files.exists(reportDirectory)) {
+            Files.createDirectories(reportDirectory);
+        }
+        return reportDirectory;
+    }
+
+    private String reportName() {
+        return "startup-report-" + testName + ".html";
     }
 
     @Override

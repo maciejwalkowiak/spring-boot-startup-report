@@ -27,14 +27,10 @@ class TimelineFactory {
                 .collect(Collectors.toList());
 
         // create a hierarchical structure
-        List<Event> events = timelineEvents.stream()
+        return timelineEvents.stream()
                 .map(it -> Event.create(it, timelineEvents, tagsResolver))
                 .sorted(Collections.reverseOrder(Comparator.comparingLong(Event::getValue)))
                 .filter(it -> it.getParentId() == null)
                 .collect(Collectors.toList());
-
-        // in most (all?) cases there is single event in the top level of the hierarchy,
-        // if that's the case its children are returned
-        return events.size() == 1 ? events.get(0).getChildren() : events;
     }
 }

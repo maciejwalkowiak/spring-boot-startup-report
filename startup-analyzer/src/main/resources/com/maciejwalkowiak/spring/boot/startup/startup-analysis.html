@@ -7,160 +7,18 @@
     <meta http-equiv="X-UA-Compatible"
           content="ie=edge">
     <title>Spring Boot Startup Analysis Report</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/spiermar/d3-flame-graph@2.0.3/dist/d3-flamegraph.css">
+    <!-- D3.js -->
+    <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+
+    <!-- d3-tip -->
+    <script type="text/javascript" src=https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.min.js></script>
+
+    <!-- d3-flamegraph -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/spiermar/d3-flame-graph@2.0.3/dist/d3-flamegraph.min.js"></script>
+
+    <!-- enables tailwindcss @apply -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module">
-
-        //<![CDATA[
-        import {h, text, app} from "https://cdn.skypack.dev/hyperapp"
-
-        const colorNames = ['yellow', 'green'];
-        const levels = [100, 200, 300, 400, 500];
-        const colors = ['gray', ...colorNames.flatMap(color => levels.map(l => `${color}-${l}`))];
-
-        const data = %events%;
-
-        const Details = (tags) =>
-            h("ul", {}, Object.entries(tags).map(([k, v]) => h("li", {}, [
-                h("strong", {}, text(k + ": ")),
-                text(v)
-            ])));
-
-        const zoomOut = () =>
-            h("div", {
-                innerHTML: `
-            <svg class="w-6 h-6"
-             fill="none"
-             stroke="currentColor"
-             viewBox="0 0 24 24"
-             xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7"></path>
-        </svg>`
-            }, [])
-
-        const zoomIn = () =>
-            h("div", {
-                innerHTML: `
-            <svg xmlns="http://www.w3.org/2000/svg"
-             fill="none"
-             viewBox="0 0 24 24"
-             stroke-width="1.5"
-             stroke="currentColor"
-             class="w-6 h-6">
-            <path stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6"/>
-        </svg>`
-            }, [])
-
-        const Placeholder = () =>
-            h("div", {
-                innerHTML: `&nbsp;`,
-                style: {width: '24px'}
-            }, [])
-
-        const Row = (event, expandedEventIds, minDuration, search, level = 0) =>
-            h("tbody", {}, [
-                h("tr", {class: `cursor-pointer hover:bg-blue-200 bg-${colors[level]}`, onclick: [Expand, event]}, [
-                    h("td", {
-                        class: "col-icon",
-                    }, event.children.length > 0 && expandedEventIds.indexOf(event.id) === -1 ? zoomIn() : expandedEventIds.indexOf(event.id) !== -1 ? zoomOut() : Placeholder()),
-                    h("td", {class: `col-name pl-${2 + level * 2}`}, text(event.label)),
-                    h("td", {class: "col-duration"}, text(event.value)),
-                    h("td", {class: "col-duration"}, text(event.actualDuration)),
-                    h("td", {class: "col-details text-sm"}, Details(event.tags))]
-                ),
-                h("tr", {}, [
-                    h("td", {colspan: 5, class: {hidden: expandedEventIds.indexOf(event.id) === -1}},
-                        event.children
-                            .filter(event => FilterEvent(event, minDuration, search))
-                            .map(event => Row(event, expandedEventIds, minDuration, search, level + 1))
-                    )
-                ])
-            ]);
-
-        const Expand = (state, event) => {
-            if (event.children.length > 0 && state.expandedEventIds.indexOf(event.id) === -1) {
-                return {...state, expandedEventIds: [event.id, ...state.expandedEventIds]};
-            } else {
-                return {...state, expandedEventIds: state.expandedEventIds.filter(it => it !== event.id)};
-            }
-        };
-
-        const OnDurationChange = (state, target) => {
-            return {...state, duration: target.value}
-        }
-
-        const OnSearchChange = (state, target) => {
-            return {...state, search: target.value}
-        }
-
-        function hasMinimumDuration(event, minimumDuration) {
-            return event.value >= minimumDuration;
-        }
-
-        function labelMatches(event, search) {
-            return search === '' || event.label.toLowerCase().includes(search.toLowerCase()) || Object.entries(event.tags).map(([k, v]) => k+v).filter(it => it.toLowerCase().includes(search.toLowerCase())).length > 0;
-        }
-
-        function childrenMatch(event, minimumDuration, search) {
-            return search === '' || event.children.filter(it => hasMinimumDuration(it, minimumDuration) && labelMatches(it, search)).length > 0;
-        }
-
-        const FilterEvent = (event, minimumDuration, search) => {
-            return hasMinimumDuration(event, minimumDuration) && (labelMatches(event, search) || childrenMatch(event, minimumDuration, search));
-        }
-
-        app({
-            init: [{events: data, expandedEventIds: [], duration: 0, search: ''}, []],
-            view: (state) => h("div", {}, [
-                h("div", {class: "p-4 w-full bg-gray-100 text-gray-700 top-header"}, [
-                    h("h2", {class: "text-3xl pt-4"}, text("🍃 Spring Boot Startup Analyzer")),
-                    h("h3", {class: "text-base font-light pb-8 pt-2 text-gray-100"}, [
-                        h("span", {}, text("made by ")),
-                        h("a", {href: "https://twitter.com/maciejwalkowiak", class: "hover:text-red-600 font-medium text-red-400"}, text("@maciejwalkowiak")),
-                    ]),
-                    h("div", {}, [
-                        h("span", {
-                            class: 'font-medium mr-2'
-                        }, [ text("Minimum duration")]),
-                        h("input", {
-                            type: "text",
-                            class: 'px-4 w-16 text-right text-gray-800',
-                            value: state.duration,
-                            oninput: (_, { target }) => [OnDurationChange, target]}, []),
-                        h("span", {
-                            class: 'font-medium mr-2 ml-4'
-                        }, [ text("Search")]),
-                        h("input", {
-                            type: "text",
-                            class: 'px-4 w-64 text-right text-gray-800',
-                            value: state.search,
-                            oninput: (_, { target }) => [OnSearchChange, target]}, [])
-                    ])
-                ]),
-                h("div", {class: "p-4 w-full bg-gray-400"}, [
-                    h("table", {class: "event-table"}, [
-                        h("thead", {}, [
-                            h("tr", {class: "font-medium"}, [
-                                h("td", {class: "col-icon"}, text("")),
-                                h("td", {class: "col-name"}, text("Name")),
-                                h("td", {class: "col-duration"}, text("Duration with children (ms)")),
-                                h("td", {class: "col-duration"}, text("Duration (ms)")),
-                                h("td", {class: "col-details"}, text("Details"))
-                            ])
-                        ]),
-                        ...state.events
-                            .filter(event => FilterEvent(event, state.duration, state.search)) // show ones with parentId == null on the first level
-                            .map(event => Row(event, state.expandedEventIds, state.duration, state.search))
-                    ])
-                ])]),
-            node: document.getElementById("app"),
-        })
-        //]]>
-    </script>
 
     <style type="text/tailwindcss">
         .col-icon {
@@ -168,7 +26,7 @@
         }
 
         .col-name {
-            @apply w-2/6 border pr-4 py-2;
+            @apply w-2/6 border px-4 py-2;
         }
 
         .col-duration {
@@ -190,7 +48,230 @@
     </style>
 </head>
 <body class="bg-gray-400">
+<!-- event table -->
 <div id="app"></div>
+
+<!-- flame graph -->
+<div class="p-4">
+    <div class="p-4 w-full bg-gray-100">
+        <a class="btn pb-8 pt-2 cursor-pointer" id="reset-zoom" title="Reset Zoom">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+            </svg>
+        </a>
+
+        <div id="chart" class="mt-4"></div>
+    </div>
+</div>
+
+<!-- top-right corner GitHub link -->
 <a href="https://github.com/maciejwalkowiak/spring-boot-startup-reporter" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#FD6C6C; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+<script type="module">
+    //<![CDATA[
+    import {h, text, app} from "https://cdn.skypack.dev/hyperapp"
+
+    // used in table
+    let data = %events%;
+
+    // flame chart
+    const sortedByDuration = [...data];
+    sortByDuration(sortedByDuration);
+
+    // if there is a single top level element, show directly its children
+    if (data.length == 1) {
+        data = data[0].children;
+    }
+
+    function compare(a,b) {
+        if (a.duration < b.duration) {
+            return -1;
+        }
+        if (a.duration > b.duration) {
+            return 1;
+        }
+        return 0;
+    }
+
+    function sortByDuration(events) {
+        events.sort(compare);
+        events.forEach(node => {
+            if (node.children.length > 0) {
+                sortByDuration(node.children);
+            }
+        })
+    }
+
+    const chart = d3.flamegraph()
+        .width(document.getElementById("chart").offsetWidth - 100);
+
+    const tip = d3.tip()
+        .direction("s")
+        .offset([8, 0])
+        .attr('class', 'd3-flame-graph-tip')
+        .html(function(d) { return JSON.stringify(d.data.tags) });
+
+    chart.tooltip(tip);
+
+    if (sortedByDuration.length > 0) {
+        // there can be single top level element
+        // educated guess that if there are more than one element, the first one is the one that contains interesting data
+        d3.select("#chart")
+            .datum(sortedByDuration[0])
+            .call(chart);
+    }
+
+    document.getElementById("reset-zoom").addEventListener("click", e => {
+        chart.resetZoom();
+        e.preventDefault();
+    })
+
+    // table
+    const colorNames = ['yellow', 'green'];
+    const levels = [100, 200, 300, 400, 500];
+    const colors = ['gray', ...colorNames.flatMap(color => levels.map(l => `${color}-${l}`))];
+
+    const Details = (tags) =>
+        h("ul", {}, Object.entries(tags).map(([k, v]) => h("li", {}, [
+            h("strong", {}, text(k + ": ")),
+            text(v)
+        ])));
+
+    const zoomOut = () =>
+        h("div", {
+            innerHTML: `
+            <svg class="w-6 h-6"
+             fill="none"
+             stroke="currentColor"
+             viewBox="0 0 24 24"
+             xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7"></path>
+        </svg>`
+        }, [])
+
+    const zoomIn = () =>
+        h("div", {
+            innerHTML: `
+            <svg xmlns="http://www.w3.org/2000/svg"
+             fill="none"
+             viewBox="0 0 24 24"
+             stroke-width="1.5"
+             stroke="currentColor"
+             class="w-6 h-6">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6"/>
+        </svg>`
+        }, [])
+
+    const Placeholder = () =>
+        h("div", {
+            innerHTML: `&nbsp;`,
+            style: {width: '24px'}
+        }, [])
+
+    const Row = (event, expandedEventIds, minDuration, search, level = 0) =>
+        h("tbody", {}, [
+            h("tr", {class: `cursor-pointer hover:bg-blue-200 bg-${colors[level]}`, onclick: [Expand, event]}, [
+                h("td", {
+                    class: "col-icon",
+                }, event.children.length > 0 && expandedEventIds.indexOf(event.id) === -1 ? zoomIn() : expandedEventIds.indexOf(event.id) !== -1 ? zoomOut() : Placeholder()),
+                h("td", {class: `col-name pl-${2 + level * 2}`}, text(event.name)),
+                h("td", {class: "col-duration"}, text(event.value)),
+                h("td", {class: "col-duration"}, text(event.actualDuration)),
+                h("td", {class: "col-details text-sm"}, Details(event.tags))]
+            ),
+            h("tr", {}, [
+                h("td", {colspan: 5, class: {hidden: expandedEventIds.indexOf(event.id) === -1}},
+                    event.children
+                        .filter(event => FilterEvent(event, minDuration, search))
+                        .map(event => Row(event, expandedEventIds, minDuration, search, level + 1))
+                )
+            ])
+        ]);
+
+    const Expand = (state, event) => {
+        if (event.children.length > 0 && state.expandedEventIds.indexOf(event.id) === -1) {
+            return {...state, expandedEventIds: [event.id, ...state.expandedEventIds]};
+        } else {
+            return {...state, expandedEventIds: state.expandedEventIds.filter(it => it !== event.id)};
+        }
+    };
+
+    const OnDurationChange = (state, target) => {
+        return {...state, duration: target.value}
+    }
+
+    const OnSearchChange = (state, target) => {
+        return {...state, search: target.value}
+    }
+
+    function hasMinimumDuration(event, minimumDuration) {
+        return event.value >= minimumDuration;
+    }
+
+    function labelMatches(event, search) {
+        return search === '' || event.name.toLowerCase().includes(search.toLowerCase()) || Object.entries(event.tags).map(([k, v]) => k+v).filter(it => it.toLowerCase().includes(search.toLowerCase())).length > 0;
+    }
+
+    function childrenMatch(event, minimumDuration, search) {
+        return search === '' || event.children.filter(it => hasMinimumDuration(it, minimumDuration) && labelMatches(it, search)).length > 0;
+    }
+
+    const FilterEvent = (event, minimumDuration, search) => {
+        return hasMinimumDuration(event, minimumDuration) && (labelMatches(event, search) || childrenMatch(event, minimumDuration, search));
+    }
+
+    app({
+        init: [{events: data, expandedEventIds: [], duration: 0, search: ''}, []],
+        view: (state) => h("div", {}, [
+            h("div", {class: "p-4 w-full bg-gray-100 text-gray-700 top-header"}, [
+                h("h2", {class: "text-3xl pt-4"}, text("🍃 Spring Boot Startup Analyzer")),
+                h("h3", {class: "text-base font-light pb-8 pt-2 text-gray-100"}, [
+                    h("span", {}, text("made by ")),
+                    h("a", {href: "https://twitter.com/maciejwalkowiak", class: "hover:text-red-600 font-medium text-red-400"}, text("@maciejwalkowiak")),
+                ]),
+                h("div", {}, [
+                    h("span", {
+                        class: 'font-medium mr-2'
+                    }, [ text("Minimum duration")]),
+                    h("input", {
+                        type: "text",
+                        class: 'px-4 w-16 text-right text-gray-800',
+                        value: state.duration,
+                        oninput: (_, { target }) => [OnDurationChange, target]}, []),
+                    h("span", {
+                        class: 'font-medium mr-2 ml-4'
+                    }, [ text("Search")]),
+                    h("input", {
+                        type: "text",
+                        class: 'px-4 w-64 text-right text-gray-800',
+                        value: state.search,
+                        oninput: (_, { target }) => [OnSearchChange, target]}, [])
+                ])
+            ]),
+            h("div", {class: "p-4 w-full bg-gray-400"}, [
+                h("table", {class: "event-table"}, [
+                    h("thead", {}, [
+                        h("tr", {class: "font-medium"}, [
+                            h("td", {class: "col-icon"}, text("")),
+                            h("td", {class: "col-name"}, text("Name")),
+                            h("td", {class: "col-duration"}, text("Duration with children (ms)")),
+                            h("td", {class: "col-duration"}, text("Duration (ms)")),
+                            h("td", {class: "col-details"}, text("Details"))
+                        ])
+                    ]),
+                    ...state.events
+                        .filter(event => FilterEvent(event, state.duration, state.search))
+                        .map(event => Row(event, state.expandedEventIds, state.duration, state.search))
+                ])
+            ])]),
+        node: document.getElementById("app"),
+    })
+    //]]>
+</script>
 </body>
 </html>

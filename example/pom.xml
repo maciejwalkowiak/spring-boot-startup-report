@@ -23,6 +23,7 @@
 			<groupId>com.maciejwalkowiak</groupId>
 			<artifactId>spring-boot-startup-analyzer</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+			<scope>test</scope>
 		</dependency>
 		<!-- test dependencies -->
 		<dependency>
@@ -31,4 +32,13 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
 </project>
