@@ -63,17 +63,21 @@ public class TimelineFactoryTest {
         List<Event> events = timelineFactory.getTimeline();
 
         // then
-        assertThat(events).hasSize(2);
-        assertThat(events).anySatisfy(it -> {
+        assertThat(events).hasSize(1);
+        Event topElement = events.get(0);
+        assertThat(topElement.getName()).isEqualTo("event1");
+        assertThat(topElement.getParentId()).isNull();
+        assertThat(topElement.getId()).isZero();
+
+        assertThat(topElement.getChildren()).anySatisfy(it -> {
             assertThat(it.getName()).isEqualTo("event2");
             assertThat(it.getParentId()).isNotNull();
             assertThat(it.getId()).isEqualTo(1);
         });
-        assertThat(events).anySatisfy(it -> {
+        assertThat(topElement.getChildren()).anySatisfy(it -> {
             assertThat(it.getName()).isEqualTo("event3");
             assertThat(it.getParentId()).isNotNull();
             assertThat(it.getId()).isEqualTo(2);
         });
-        assertThat(events).noneSatisfy(it -> assertThat(it.getName()).isEqualTo("event1"));
     }
 }

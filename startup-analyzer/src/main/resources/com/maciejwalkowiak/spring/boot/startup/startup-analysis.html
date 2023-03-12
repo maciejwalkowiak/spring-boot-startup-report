@@ -26,7 +26,7 @@
         }
 
         .col-name {
-            @apply w-2/6 border pr-4 py-2;
+            @apply w-2/6 border px-4 py-2;
         }
 
         .col-duration {
@@ -71,13 +71,37 @@
     //<![CDATA[
     import {h, text, app} from "https://cdn.skypack.dev/hyperapp"
 
-    const colorNames = ['yellow', 'green'];
-    const levels = [100, 200, 300, 400, 500];
-    const colors = ['gray', ...colorNames.flatMap(color => levels.map(l => `${color}-${l}`))];
-
-    const data = %events%;
+    // used in table
+    let data = %events%;
 
     // flame chart
+    const sortedByDuration = [...data];
+    sortByDuration(sortedByDuration);
+
+    // if there is a single top level element, show directly its children
+    if (data.length == 1) {
+        data = data[0].children;
+    }
+
+    function compare(a,b) {
+        if (a.duration < b.duration) {
+            return -1;
+        }
+        if (a.duration > b.duration) {
+            return 1;
+        }
+        return 0;
+    }
+
+    function sortByDuration(events) {
+        events.sort(compare);
+        events.forEach(node => {
+            if (node.children.length > 0) {
+                sortByDuration(node.children);
+            }
+        })
+    }
+
     const chart = d3.flamegraph()
         .width(document.getElementById("chart").offsetWidth - 100);
 
@@ -89,11 +113,11 @@
 
     chart.tooltip(tip);
 
-    if (data.length > 0) {
+    if (sortedByDuration.length > 0) {
         // there can be single top level element
         // educated guess that if there are more than one element, the first one is the one that contains interesting data
         d3.select("#chart")
-            .datum(data[0])
+            .datum(sortedByDuration[0])
             .call(chart);
     }
 
@@ -101,6 +125,11 @@
         chart.resetZoom();
         e.preventDefault();
     })
+
+    // table
+    const colorNames = ['yellow', 'green'];
+    const levels = [100, 200, 300, 400, 500];
+    const colors = ['gray', ...colorNames.flatMap(color => levels.map(l => `${color}-${l}`))];
 
     const Details = (tags) =>
         h("ul", {}, Object.entries(tags).map(([k, v]) => h("li", {}, [
@@ -236,7 +265,7 @@
                         ])
                     ]),
                     ...state.events
-                        .filter(event => FilterEvent(event, state.duration, state.search)) // show ones with parentId == null on the first level
+                        .filter(event => FilterEvent(event, state.duration, state.search))
                         .map(event => Row(event, state.expandedEventIds, state.duration, state.search))
                 ])
             ])]),

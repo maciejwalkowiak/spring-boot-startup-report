@@ -17,7 +17,7 @@ class ReportRendererTests {
     @Test
     void rendersReport() {
         String report = reportRenderer.render();
-        assertThat(report).contains("const data = [{");
+        assertThat(report).contains("let data = [{");
     }
 
 }

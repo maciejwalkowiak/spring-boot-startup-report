@@ -18,8 +18,8 @@ import org.springframework.core.metrics.StartupStep;
 import org.springframework.core.metrics.StartupStep.Tags;
 
 /**
- * Resolves tags from {@link TimelineEvent} tags by getting more details from the {@link ApplicationContext}.
- * 
+ * Resolves tags from {@link StartupTimeline.TimelineEvent} tags by getting more details from the {@link ApplicationContext}.
+ *
  * @author Maciej Walkowiak
  */
 class TagsResolver implements ApplicationContextAware {
