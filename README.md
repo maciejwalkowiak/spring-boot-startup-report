@@ -4,7 +4,7 @@
 what contributes to the application startup time and perhaps helps to optimize it.
 
 > **Warning**
-> Project is early stage, feedback very welcome!
+> Project is early stage and is no perfect by any means. Please suggest any improvement you have in mind and PRs are more than welcome! 
 
 ## 🤩 Highlights
 
