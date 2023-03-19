@@ -11,7 +11,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>startup-report-example</artifactId>
+	<artifactId>spring-boot-startup-report-example</artifactId>
 	<version>${project.parent.version}</version>
 
 	<dependencies>

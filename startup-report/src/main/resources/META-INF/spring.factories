@@ -1,2 +1,3 @@
 org.springframework.context.ApplicationContextInitializer=com.maciejwalkowiak.spring.boot.startup.StartupEventsInitializer
 org.springframework.test.context.ContextCustomizerFactory=com.maciejwalkowiak.spring.boot.startup.StartupEventsCustomizerFactory
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.maciejwalkowiak.spring.boot.startup.StartupEventsAutoConfiguration
