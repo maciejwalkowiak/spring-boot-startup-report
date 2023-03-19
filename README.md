@@ -6,6 +6,21 @@ what contributes to the application startup time and perhaps helps to optimize i
 > **Warning**
 > Project is early stage, feedback very welcome!
 
+## 🤩 Highlights
+
+- startup report available in runtime as an interactive HTML page
+- generating startup reports in integration tests
+- flame chart
+- search by class or an annotation
+
+Report table lets you dig into the details of beans instantiation:
+
+![Report](docs/images/table.png)
+
+Flame graphs is a more visual representation of the data from the table:
+
+![Report](docs/images/flamechart.png)
+
 ## ✨ How to use
 
 1. Add the dependency to `spring-boot-startup-report`:
