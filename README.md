@@ -29,7 +29,7 @@ Flame graphs is a more visual representation of the data from the table:
 <dependency>
     <groupId>com.maciejwalkowiak.spring</groupId>
     <artifactId>spring-boot-startup-report</artifactId>
-    <version>1.0.0</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 
