@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.maciejwalkowiak.spring</groupId>
     <artifactId>spring-boot-startup-report-parent</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
     <name>Spring Boot Startup Report Parent</name>
     <description>Spring Boot Startup Report Parent</description>
     <url>https://github.com/maciejwalkowiak/spring-boot-startup-report/</url>
