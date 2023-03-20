@@ -30,6 +30,7 @@ Flame graphs is a more visual representation of the data from the table:
     <groupId>com.maciejwalkowiak.spring</groupId>
     <artifactId>spring-boot-startup-report</artifactId>
     <version>0.1.0</version>
+    <optional>true</optional>
 </dependency>
 ```
 
@@ -38,7 +39,7 @@ Flame graphs is a more visual representation of the data from the table:
 3. Assuming application runs on port `8080`, go to `http://localhost:8080/startup-report`
 
 > **Note**
-> This library has dependencies to `org.springframework:spring-test` and `org.springframework.boot:spring-boot-test` so most likely you don't want to include it to your production build and it makes more sense to keep in in the test scope
+> This library has dependencies to `org.springframework:spring-test` and `org.springframework.boot:spring-boot-test` so most likely you don't want to include it to your production build and therefore we use it as an optional dependency.
 
 ## Using with integration tests
 
@@ -61,7 +62,7 @@ If you need only to generate reports for tests, but do not need to have the repo
 <dependency>
     <groupId>com.maciejwalkowiak.spring</groupId>
     <artifactId>spring-boot-startup-report</artifactId>
-    <version>1.0.0</version>
+    <version>0.1.0</version>
     <scope>test</scope>
 </dependency>
 ```
