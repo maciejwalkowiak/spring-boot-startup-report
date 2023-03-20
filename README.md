@@ -23,6 +23,15 @@ Flame graphs is a more visual representation of the data from the table:
 
 ## ✨ How to use
 
+> **Note** 
+> The report generation depends on Jackson present on the classpath. If you already have `spring-boot-starter-web` or `spring-boot-starter-json` or any other dependency that brings Jackson - there is nothing to worry about, otherwise make sure to add this to your dependency list:
+> ```
+> <dependency>
+>    <groupId>com.fasterxml.jackson.core</groupId>
+>    <artifactId>jackson-databind</artifactId>
+>  </dependency>
+> ```
+
 1. Add the dependency to `spring-boot-startup-report`:
 
 ```xml
