@@ -23,7 +23,6 @@
 			<groupId>com.maciejwalkowiak.spring</groupId>
 			<artifactId>spring-boot-startup-report</artifactId>
 			<version>${project.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<!-- test dependencies -->
 		<dependency>
