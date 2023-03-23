@@ -18,7 +18,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>8</java.version>
         <spring-boot.version>2.7.7</spring-boot.version>
         <junit.version>5.9.2</junit.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>

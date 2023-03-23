@@ -14,7 +14,7 @@
     <description>Spring Boot Startup Report</description>
     <url>https://github.com/maciejwalkowiak/spring-boot-startup-report/</url>
     <properties>
-        <java.version>11</java.version>
+        <java.version>8</java.version>
     </properties>
 
     <dependencies>
