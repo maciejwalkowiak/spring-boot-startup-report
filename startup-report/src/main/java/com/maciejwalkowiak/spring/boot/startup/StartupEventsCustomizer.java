@@ -12,6 +12,9 @@ import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.test.context.ContextCustomizer;
 import org.springframework.test.context.MergedContextConfiguration;
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
+
 /**
  * Adds a listener that generates an HTML report with {@link ReportRenderer} when application context gets closed.
  *
@@ -33,7 +36,7 @@ public class StartupEventsCustomizer implements ContextCustomizer {
                     ReportRenderer reportRenderer = context.getBean(ReportRenderer.class);
                     try {
                         Path buildDirectory = resolveReportDirectory();
-                        Path path = Files.writeString(buildDirectory.resolve(Path.of(reportName())), reportRenderer.render());
+                        Path path = Files.write(buildDirectory.resolve(Paths.get(reportName())), reportRenderer.render().getBytes(StandardCharsets.UTF_8));
                         LOGGER.debug("Report for test {} saved to {}", testName, path.toAbsolutePath());
                     } catch (IOException e) {
                         LOGGER.error("Error during rendering analysis report", e);
@@ -47,8 +50,8 @@ public class StartupEventsCustomizer implements ContextCustomizer {
     }
 
     private static Path resolveReportDirectory() throws IOException {
-        Path mavenTarget = Path.of("target");
-        Path gradleBuild = Path.of("build");
+        Path mavenTarget = Paths.get("target");
+        Path gradleBuild = Paths.get("build");
 
         Path buildDirectory;
         if (Files.exists(mavenTarget)) {
@@ -56,7 +59,7 @@ public class StartupEventsCustomizer implements ContextCustomizer {
         } else if (Files.exists(gradleBuild)) {
             buildDirectory = gradleBuild;
         } else {
-            buildDirectory = Path.of(".");
+            buildDirectory = Paths.get(".");
         }
 
         Path reportDirectory = buildDirectory.resolve("startup-reports");

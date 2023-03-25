@@ -25,7 +25,7 @@ public class TagsResolverTest {
 
     @Test
     void returnsSimpleTagsWhenApplicationContextNotSet() {
-        var timelineEvent = Mockito.mock(TimelineEvent.class, Answers.RETURNS_DEEP_STUBS);
+        TimelineEvent timelineEvent = Mockito.mock(TimelineEvent.class, Answers.RETURNS_DEEP_STUBS);
         when(timelineEvent.getStartupStep().getTags()).thenReturn(new TagsContainer(new SimpleTag("key", "val")));
         
         Map<String,String> result = tagsResolver.resolveTags(timelineEvent);
@@ -35,7 +35,7 @@ public class TagsResolverTest {
 
     @Test
     void returnsTagWithClassName() {
-        var timelineEvent = Mockito.mock(TimelineEvent.class, Answers.RETURNS_DEEP_STUBS);
+        TimelineEvent timelineEvent = Mockito.mock(TimelineEvent.class, Answers.RETURNS_DEEP_STUBS);
         when(timelineEvent.getStartupStep().getTags()).thenReturn(new TagsContainer(new SimpleTag("beanName", "fooService")));
 
         AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
@@ -50,7 +50,7 @@ public class TagsResolverTest {
 
     @Test
     void returnsTagWithAnnotations() {
-        var timelineEvent = Mockito.mock(TimelineEvent.class, Answers.RETURNS_DEEP_STUBS);
+        TimelineEvent timelineEvent = Mockito.mock(TimelineEvent.class, Answers.RETURNS_DEEP_STUBS);
         when(timelineEvent.getStartupStep().getTags()).thenReturn(new TagsContainer(new SimpleTag("beanName", "fooService")));
 
         AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
