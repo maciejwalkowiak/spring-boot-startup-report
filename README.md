@@ -25,7 +25,7 @@ Flame graphs is a more visual representation of the data from the table:
 
 To use the library your project must use following versions
 
-- Java 11 (from `0.2.0` it will run with Java 8)
+- Java 8
 - Spring Boot 2.7+, 3.0+
 
 ## ✨ How to use

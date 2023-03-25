@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>com.maciejwalkowiak.spring</groupId>
 		<artifactId>spring-boot-startup-report-parent</artifactId>
-		<version>0.1.1-SNAPSHOT</version>
+		<version>0.2.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
