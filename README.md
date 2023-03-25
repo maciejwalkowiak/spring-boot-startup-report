@@ -3,8 +3,8 @@
 **Spring Boot Startup Report** library generates an interactive Spring Boot application startup report that lets you understand 
 what contributes to the application startup time and perhaps helps to optimize it.
 
-> **Warning**
-> Project is early stage and is no perfect by any means. Please suggest any improvement you have in mind and PRs are more than welcome! 
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/maciejwalkowiak/spring-boot-startup-report)
+
 
 ## 🤩 Highlights
 
