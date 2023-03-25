@@ -30,7 +30,7 @@ public class StartupEventsAutoConfiguration {
         return new ReportRenderer(timelineFactory, resourceLoader);
     }
 
-    @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+    @ConditionalOnWebApplication
     @Bean
     StartupEventsController startupEventsController(ReportRenderer reportRenderer) {
         return new StartupEventsController(reportRenderer);
