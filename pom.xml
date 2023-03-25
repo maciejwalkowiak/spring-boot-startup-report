@@ -29,7 +29,6 @@
     <modules>
         <module>startup-report</module>
         <module>example</module>
-        <module>webflux-example</module>
     </modules>
 
     <dependencyManagement>
