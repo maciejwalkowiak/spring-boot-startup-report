@@ -45,7 +45,7 @@ To use the library your project must use following versions
 <dependency>
     <groupId>com.maciejwalkowiak.spring</groupId>
     <artifactId>spring-boot-startup-report</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
     <optional>true</optional>
 </dependency>
 ```
@@ -78,7 +78,7 @@ If you need only to generate reports for tests, but do not need to have the repo
 <dependency>
     <groupId>com.maciejwalkowiak.spring</groupId>
     <artifactId>spring-boot-startup-report</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
     <scope>test</scope>
 </dependency>
 ```
