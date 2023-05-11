@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### NodeJS ###
+node_modules
+startup-report/src/main/resources/META-INF/resources/startup-report/static/

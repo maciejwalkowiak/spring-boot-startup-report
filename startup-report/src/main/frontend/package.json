@@ -1,0 +1,17 @@
+{
+  "name": "frontend",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "build": "./build.sh"
+  },
+  "devDependencies": {
+    "d3-flame-graph": "2.0.3",
+    "d3-tip": "^0.9.1",
+    "d3v4": "^4.2.2",
+    "hyperapp": "^2.0.22",
+    "tailwindcss": "^3.3.2",
+    "webpack": "^5.82.1",
+    "webpack-cli": "^5.1.1"
+  }
+}
