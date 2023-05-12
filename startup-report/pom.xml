@@ -41,33 +41,41 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>com.maciejwalkowiak.paseq</groupId>
-                <artifactId>paseq-maven-plugin</artifactId>
-                <version>0.1.1</version>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
                 <executions>
                     <execution>
-                        <phase>compile</phase>
+                        <id>npm install</id>
                         <goals>
                             <goal>exec</goal>
                         </goals>
+                        <phase>initialize</phase>
                         <configuration>
-                            <tasks>
-                                <task>
-                                    <exec>
-                                        <directory>src/main/frontend</directory>
-                                        <command>npm install</command>
-                                    </exec>
-                                </task>
-                                <task>
-                                    <exec>
-                                        <directory>src/main/frontend</directory>
-                                        <command>npm run build</command>
-                                    </exec>
-                                </task>
-                            </tasks>
+                            <executable>npm</executable>
+                            <arguments>
+                                <argument>install</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm run build</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>compile</phase>
+                        <configuration>
+                            <executable>npm</executable>
+                            <arguments>
+                                <argument>run</argument>
+                                <argument>build</argument>
+                            </arguments>
                         </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <workingDirectory>${basedir}/src/main/frontend/</workingDirectory>
+                </configuration>
             </plugin>
         </plugins>
     </build>
