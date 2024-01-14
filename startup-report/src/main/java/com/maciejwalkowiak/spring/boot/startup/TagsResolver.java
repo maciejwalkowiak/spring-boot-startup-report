@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.support.ScopeNotActiveException;
 import org.springframework.boot.context.metrics.buffering.StartupTimeline;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -45,6 +46,8 @@ class TagsResolver implements ApplicationContextAware {
                 }
             } catch (NoSuchBeanDefinitionException e) {
                 LOGGER.debug("No bean with name {} found", tags.get("beanName"), e);
+            } catch (ScopeNotActiveException e) {
+                LOGGER.debug("Scope is not active when fetching tags from bean: {}", tags.get("beanName"), e);
             }
 
         }
